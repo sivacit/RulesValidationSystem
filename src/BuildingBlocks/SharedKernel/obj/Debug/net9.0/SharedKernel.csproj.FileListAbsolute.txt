@@ -1,0 +1,11 @@
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/bin/Debug/net9.0/SharedKernel.deps.json
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/bin/Debug/net9.0/SharedKernel.dll
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/bin/Debug/net9.0/SharedKernel.pdb
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/obj/Debug/net9.0/SharedKernel.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/obj/Debug/net9.0/SharedKernel.AssemblyInfoInputs.cache
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/obj/Debug/net9.0/SharedKernel.AssemblyInfo.cs
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/obj/Debug/net9.0/SharedKernel.csproj.CoreCompileInputs.cache
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/obj/Debug/net9.0/SharedKernel.dll
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/obj/Debug/net9.0/refint/SharedKernel.dll
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/obj/Debug/net9.0/SharedKernel.pdb
+/Users/sivakumar/work/rule_engine/RulesValidationSystem/src/BuildingBlocks/SharedKernel/obj/Debug/net9.0/ref/SharedKernel.dll
