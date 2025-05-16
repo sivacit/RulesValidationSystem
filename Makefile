@@ -17,6 +17,7 @@ help:
 .PHONY: setup
 setup:
 	dotnet tool install --global dotnet-ef
+	dotnet dev-certs https --trust
 .PHONY: build
 build:
 	dotnet build $(SOLUTION)
