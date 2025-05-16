@@ -1,0 +1,52 @@
+<Patients>
+  <Patient>
+    <PatientID>P001</PatientID>
+    <Name>Emily Clarke</Name>
+    <Age>52</Age>
+    <Gender>F</Gender>
+    <Diagnosis>Hypertension</Diagnosis>
+    <BloodPressure>150/95</BloodPressure>
+    <AdmittedDate>2023-05-01</AdmittedDate>
+    <Discharged>false</Discharged>
+  </Patient>
+  <Patient>
+    <PatientID>P002</PatientID>
+    <Name>Chris Evans</Name>
+    <Age>67</Age>
+    <Gender>M</Gender>
+    <Diagnosis>Diabetes</Diagnosis>
+    <BloodPressure>140/85</BloodPressure>
+    <AdmittedDate>2023-04-20</AdmittedDate>
+    <Discharged>true</Discharged>
+  </Patient>
+  <Patient>
+    <PatientID>P003</PatientID>
+    <Name>Sophia Lee</Name>
+    <Age>35</Age>
+    <Gender>F</Gender>
+    <Diagnosis>Normal</Diagnosis>
+    <BloodPressure>120/80</BloodPressure>
+    <AdmittedDate>2023-05-10</AdmittedDate>
+    <Discharged>false</Discharged>
+  </Patient>
+  <Patient>
+    <PatientID>P004</PatientID>
+    <Name>Mark Ruffalo</Name>
+    <Age>75</Age>
+    <Gender>M</Gender>
+    <Diagnosis>Cardiac Arrest</Diagnosis>
+    <BloodPressure>160/110</BloodPressure>
+    <AdmittedDate>2023-03-15</AdmittedDate>
+    <Discharged>true</Discharged>
+  </Patient>
+  <Patient>
+    <PatientID>P005</PatientID>
+    <Name>Alice Stone</Name>
+    <Age>17</Age>
+    <Gender>F</Gender>
+    <Diagnosis>Anemia</Diagnosis>
+    <BloodPressure>130/90</BloodPressure>
+    <AdmittedDate>2023-06-01</AdmittedDate>
+    <Discharged>false</Discharged>
+  </Patient>
+</Patients>

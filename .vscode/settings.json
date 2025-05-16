@@ -1,0 +1,4 @@
+{
+  "dotnet_separate_import_directive_groups": true,
+  "csharp.format.imports.placeSystemNamespaceFirst": true
+}

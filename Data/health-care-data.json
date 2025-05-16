@@ -1,0 +1,52 @@
+[
+  {
+    "PatientID": "P001",
+    "Name": "Emily Clarke",
+    "Age": 52,
+    "Gender": "F",
+    "Diagnosis": "Hypertension",
+    "BloodPressure": "150/95",
+    "AdmittedDate": "2023-05-01",
+    "Discharged": false
+  },
+  {
+    "PatientID": "P002",
+    "Name": "Chris Evans",
+    "Age": 67,
+    "Gender": "M",
+    "Diagnosis": "Diabetes",
+    "BloodPressure": "140/85",
+    "AdmittedDate": "2023-04-20",
+    "Discharged": true
+  },
+  {
+    "PatientID": "P003",
+    "Name": "Sophia Lee",
+    "Age": 35,
+    "Gender": "F",
+    "Diagnosis": "Normal",
+    "BloodPressure": "120/80",
+    "AdmittedDate": "2023-05-10",
+    "Discharged": false
+  },
+  {
+    "PatientID": "P004",
+    "Name": "Mark Ruffalo",
+    "Age": 75,
+    "Gender": "M",
+    "Diagnosis": "Cardiac Arrest",
+    "BloodPressure": "160/110",
+    "AdmittedDate": "2023-03-15",
+    "Discharged": true
+  },
+  {
+    "PatientID": "P005",
+    "Name": "Alice Stone",
+    "Age": 17,
+    "Gender": "F",
+    "Diagnosis": "Anemia",
+    "BloodPressure": "130/90",
+    "AdmittedDate": "2023-06-01",
+    "Discharged": false
+  }
+]
