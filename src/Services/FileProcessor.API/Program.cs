@@ -36,6 +36,17 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.AddSupportedUICultures(cultures);
 });
 
+// ✅ Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Your Vue app URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 // ✅ Configure supported cultures
 builder.Services.Configure<RequestLocalizationOptions>(options =>
@@ -76,6 +87,8 @@ Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name);
 
 var app = builder.Build();
 app.UseRequestLocalization();
+app.UseCors("AllowVueApp");
+
 
 app.UseRouting();
 app.UseAuthorization();

@@ -1,6 +1,6 @@
 PatientID,Name,Age,Gender,Diagnosis,BloodPressure,AdmittedDate,Discharged
-P001,Emily Clarke,52,F,Hypertension,150/95,2023-05-01,false
-P002,Chris Evans,67,M,Diabetes,140/85,2023-04-20,true
-P003,Sophia Lee,35,F,Normal,120/80,2023-05-10,false
-P004,Mark Ruffalo,75,M,Cardiac Arrest,160/110,2023-03-15,true
-P005,Alice Stone,17,F,Anemia,130/90,2023-06-01,false
+P001,Emily Clarke,52,F,Hypertension,150,01/05/23,FALSE
+P002,Chris Evans,67,M,Diabetes,140,20/04/23,TRUE
+P003,Sophia Lee,35,F,Normal,120,10/05/23,FALSE
+P004,Mark Ruffalo,75,M,Cardiac Arrest,160,15/03/23,TRUE
+P005,Alice Stone,17,F,Anemia,130,01/06/23,FALSE

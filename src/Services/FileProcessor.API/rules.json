@@ -1,0 +1,19 @@
+[
+  {
+    "WorkflowName": "CSVWorkflow",
+    "Rules": [
+      {
+        "RuleName": "Age",
+        "Rules": null,
+        "Properties": null,
+        "Operator": null,
+        "ErrorMessage": "patient should be 19",
+        "Enabled": true,
+        "WorkflowsToInject": null,
+        "Expression": "Convert.ToInt32(input1.Age) > 19",
+        "Actions": null,
+        "SuccessEvent": "2"
+      }
+    ]
+  }
+]
