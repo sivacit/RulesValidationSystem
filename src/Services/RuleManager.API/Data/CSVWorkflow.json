@@ -1,0 +1,26 @@
+[
+  {
+    "RuleName": "AgeCheck",
+    "RuleExpressionType": "LambdaExpression",
+    "Expression": "Convert.ToInt32(input1[\u0022Age\u0022]) \u003E= 18",
+    "ErrorMessage": "Patient must be at least 18 years old",
+    "SuccessEvent": "10",
+    "Enabled": true
+  },
+  {
+    "RuleName": "CriticalBPCheck",
+    "RuleExpressionType": "LambdaExpression",
+    "Expression": "input1[\u0022BloodPressure\u0022].Contains(\u0022160/\u0022) || input1[\u0022BloodPressure\u0022].EndsWith(\u0022/110\u0022)",
+    "ErrorMessage": "Patient has critical blood pressure",
+    "SuccessEvent": "20",
+    "Enabled": true
+  },
+  {
+    "RuleName": "seniorCheck",
+    "RuleExpressionType": "LambdaExpression",
+    "Expression": "Convert.ToInt32(input1[\u0022Age\u0022]) \u003E= 65",
+    "ErrorMessage": "not eligible for discount",
+    "SuccessEvent": "0",
+    "Enabled": true
+  }
+]
