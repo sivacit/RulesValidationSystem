@@ -1,0 +1,20 @@
+[
+    {
+      "WorkflowName": "CSVWorkflow",
+      "Rules": [
+        {
+          "RuleName": "MinimumAgeCheck",
+          "RuleExpressionType": "LambdaExpression",
+          "Expression": "Convert.ToInt32(input1[\"Age\"]) >= 18",
+          "ErrorMessage": "Policy holder must be at least 18 years old"
+        },
+        {
+          "RuleName": "PremiumAmountCheck",
+          "RuleExpressionType": "LambdaExpression",
+          "Expression": "Convert.ToDouble(input1[\"PremiumAmount\"]) >= 12000",
+          "ErrorMessage": "Premium must be at least 12,000"
+        }
+      ]
+    }
+  ]
+  

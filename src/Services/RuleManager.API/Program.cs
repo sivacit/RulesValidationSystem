@@ -1,8 +1,45 @@
+using Microsoft.OpenApi.Models;
+using RulesValidationSystem.Data;
+using System.Globalization;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+// Adding Swagger and OPENAPI:
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "File Processor API",
+        Version = "v1",
+        Description = "API for uploading and validating CSV, Excel, JSON, and XML files using RulesEngine.",
+        Contact = new OpenApiContact
+        {
+            Name = "Sutherland Global",
+            Email = "sivakumar.krishnasamy@sutherlandglobal.com"
+        }
+    });
+
+    // Include XML comments (optional but recommended)
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+});
+
+// 👇 Use SQLite instead of SQL Server
+builder.Services.AddDbContext<RulesDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 var app = builder.Build();
 
@@ -12,24 +49,16 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
+// Adding Swagger
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "File Processor API V1");
+    options.RoutePrefix = "docs"; // Serve Swagger at root (optional)
+});
+
+app.MapControllers();
 
 app.Run();
 
