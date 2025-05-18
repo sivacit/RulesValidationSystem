@@ -5,50 +5,54 @@ using System.Text.Json;
 using RulesValidationSystem.Model;
 using RulesValidationSystem.Services;
 
-public class ValidationController : Controller
+namespace RulesValidationSystem.Controllers
 {
-    private readonly IWebHostEnvironment _env;
-
-    public ValidationController(IWebHostEnvironment env)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ValidationController : ControllerBase
     {
-        _env = env;
-    }
+        private readonly IWebHostEnvironment _env;
 
-    [HttpGet]
-    public IActionResult Index() => View();
-
-    [HttpPost]
-    public async Task<IActionResult> Upload(IFormFile csvFile)
-    {
-        if (csvFile == null || csvFile.Length == 0)
-            return BadRequest("Upload failed.");
-
-        var rulesPath = Path.Combine(_env.ContentRootPath, "rules.json");
-        var rulesJson = System.IO.File.ReadAllText(rulesPath);
-        var workflows = JsonSerializer.Deserialize<Workflow[]>(rulesJson);
-        var engine = new RulesEngine.RulesEngine(workflows, null);
-
-        using var reader = new StreamReader(csvFile.OpenReadStream());
-        var content = await reader.ReadToEndAsync();
-        var rows = CsvParserService.Parse(content); // returns List<dynamic>
-
-        var results = new List<object>();
-
-        foreach (var row in rows)
+        public ValidationController(IWebHostEnvironment env)
         {
-            var input = new RuleParameter("input1", row);
-            var outcome = await engine.ExecuteAllRulesAsync("CSVWorkflow", new[] { input });
-
-            results.Add(new {
-                Row = row,
-                Outcome = outcome.Select(r => new {
-                    r.Rule.RuleName,
-                    r.IsSuccess,
-                    r.ExceptionMessage
-                })
-            });
+            _env = env;
         }
 
-        return Json(results);
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile csvFile)
+        {
+            if (csvFile == null || csvFile.Length == 0)
+                return BadRequest("Upload failed.");
+
+            var rulesPath = Path.Combine(_env.ContentRootPath, "rules.json");
+            var rulesJson = System.IO.File.ReadAllText(rulesPath);
+            var workflows = JsonSerializer.Deserialize<Workflow[]>(rulesJson);
+            var engine = new RulesEngine.RulesEngine(workflows, null);
+
+            using var reader = new StreamReader(csvFile.OpenReadStream());
+            var content = await reader.ReadToEndAsync();
+            var rows = CsvParserService.Parse(content); // returns List<dynamic>
+
+            var results = new List<object>();
+
+            foreach (var row in rows)
+            {
+                var input = new RuleParameter("input1", row);
+                var outcome = await engine.ExecuteAllRulesAsync("CSVWorkflow", new[] { input });
+
+                results.Add(new
+                {
+                    Row = row,
+                    Outcome = outcome.Select(r => new
+                    {
+                        r.Rule.RuleName,
+                        r.IsSuccess,
+                        r.ExceptionMessage
+                    })
+                });
+            }
+
+            return Json(results);
+        }
     }
 }

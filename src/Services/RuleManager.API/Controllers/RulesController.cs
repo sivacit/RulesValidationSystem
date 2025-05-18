@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RulesValidationSystem.Data;
+using RulesValidationSystem.Dtos;
 using RulesValidationSystem.Model;
 using System.IO;
 using System.Threading.Tasks;
+using System.Text.Json;
+
 
 namespace RulesValidationSystem.Controllers
 {
@@ -23,27 +26,86 @@ namespace RulesValidationSystem.Controllers
         [HttpGet("Configure")]
         public async Task<IActionResult> Configure(string workflowName = "DefaultWorkflow")
         {
+            Console.WriteLine($"------------- {workflowName}");
+
             var workflow = await _context.RulesWorkflows
                 .FirstOrDefaultAsync(w => w.WorkflowName == workflowName);
 
-            if (workflow == null && workflowName == "DefaultWorkflow")
+            if (workflow == null)
             {
-                var filePath = Path.Combine(_dataDirectory, "DefaultWorkflow.json");
-                if (System.IO.File.Exists(filePath))
-                {
-                    var json = await System.IO.File.ReadAllTextAsync(filePath);
-                    workflow = new RulesWorkflow
-                    {
-                        WorkflowName = "DefaultWorkflow",
-                        RulesJson = json
-                    };
-                    return Content(json, "application/json");
-                }
-
-                return NotFound("DefaultWorkflow not found in database or file system.");
+                return NotFound($"{workflowName} not found in database.");
             }
 
-            return Content(workflow.RulesJson, "application/json");
+            // Define minimal rule structure to exclude unnecessary fields
+            var allRules = JsonSerializer.Deserialize<List<RuleDto>>(workflow.RulesJson, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            // Filter out rules with missing RuleName or Expression
+            var validRules = allRules
+                .Where(r => !string.IsNullOrWhiteSpace(r.RuleName) && !string.IsNullOrWhiteSpace(r.Expression))
+                .Select(r => new
+                {
+                    r.RuleName,
+                    r.RuleExpressionType,
+                    r.Expression,
+                    r.ErrorMessage,
+                    r.SuccessEvent
+                })
+                .ToList();
+
+            var response = new
+            {
+                WorkflowName = workflow.WorkflowName,
+                Rules = validRules
+            };
+
+            var jsonOutput = JsonSerializer.Serialize(response, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            return Content(jsonOutput, "application/json");
+        }
+
+
+
+        [HttpPost("Configure")]
+        public async Task<IActionResult> SaveWorkflow([FromBody] WorkflowInputDto input)
+        {
+            if (input == null || string.IsNullOrWhiteSpace(input.WorkflowName) || input.Rules == null)
+                return BadRequest("WorkflowName and Rules are required.");
+
+            var rulesJson = JsonSerializer.Serialize(input.Rules, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            var existing = await _context.RulesWorkflows
+                .FirstOrDefaultAsync(w => w.WorkflowName == input.WorkflowName);
+            Console.WriteLine($"Already existing workflow {existing}  --- {input.WorkflowName}");
+            if (existing != null)
+            {
+                existing.RulesJson = rulesJson;
+                _context.RulesWorkflows.Update(existing);
+            }
+            else
+            {
+                _context.RulesWorkflows.Add(new RulesWorkflow
+                {
+                    WorkflowName = input.WorkflowName,
+                    RulesJson = rulesJson
+                });
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Optional: Save to file if it's DefaultWorkflow or for all workflows
+            var filePath = Path.Combine(_dataDirectory, $"{input.WorkflowName}.json");
+            await System.IO.File.WriteAllTextAsync(filePath, rulesJson);
+
+            return Ok(new { message = $"Workflow '{input.WorkflowName}' saved successfully." });
         }
     }
 }

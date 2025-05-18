@@ -15,6 +15,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // Adding Swagger and OPENAPI:
 builder.Services.AddEndpointsApiExplorer();
+// ✅ Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Your Vue app URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -42,6 +54,9 @@ builder.Services.AddDbContext<RulesDbContext>(options =>
 
 
 var app = builder.Build();
+app.UseCors("AllowVueApp");
+app.UseAuthorization();
+app.MapControllers();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -58,7 +73,6 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "docs"; // Serve Swagger at root (optional)
 });
 
-app.MapControllers();
 
 app.Run();
 
