@@ -59,6 +59,54 @@ public class FileUploadController : ControllerBase
         return Ok(all);
     }
 
+    public static Dictionary<string, string> ToFlatDictionary(object obj, string prefix = "")
+    {
+        var result = new Dictionary<string, string>();
+
+        if (obj is ExpandoObject expando)
+        {
+            foreach (var kvp in (IDictionary<string, object>)expando)
+            {
+                // If prefix is "Fields", drop it
+                string newPrefix = (prefix == "Fields") ? kvp.Key :
+                                   string.IsNullOrEmpty(prefix) ? kvp.Key : $"{prefix}.{kvp.Key}";
+
+                foreach (var nested in ToFlatDictionary(kvp.Value, newPrefix))
+                {
+                    result[nested.Key] = nested.Value;
+                }
+            }
+        }
+        else if (obj is IDictionary<string, string> dict)
+        {
+            foreach (var kvp in dict)
+            {
+                string key = (prefix == "Fields") ? kvp.Key :
+                             string.IsNullOrEmpty(prefix) ? kvp.Key : $"{prefix}.{kvp.Key}";
+                result[key] = kvp.Value;
+            }
+        }
+        else if (obj is IEnumerable<ExpandoObject> list)
+        {
+            int i = 0;
+            foreach (var item in list)
+            {
+                foreach (var nested in ToFlatDictionary(item, $"{prefix}[{i}]"))
+                {
+                    result[nested.Key] = nested.Value;
+                }
+                i++;
+            }
+        }
+        else
+        {
+            result[prefix] = obj?.ToString() ?? "";
+        }
+
+        return result;
+    }
+
+
     /// <summary>
     /// Uploads a file (.csv, .json, .xml, .xlsx) and stores validated records in Redis.
     /// </summary>
@@ -94,16 +142,19 @@ public class FileUploadController : ControllerBase
             foreach (var record in limitedRecords)
             {
                 var expando = ToExpando(record); // Convert FileRecord to ExpandoObject
-                var dict = (IDictionary<string, object>)expando;
+                var rowDict = ToFlatDictionary(expando);
+                foreach (var kvp in rowDict)
+                {
+                    Console.WriteLine($"{kvp.Key} = {kvp.Value}");
+                }
 
+                var dict = (IDictionary<string, object>)expando;
                 var errors = new List<string>();
 
-                 var input = new RuleParameter("input1", dict);
+                var input = new RuleParameter("input1", rowDict);
                 var ruleResults = await rulesEngine.ExecuteAllRulesAsync("CSVWorkflow", new[] { input });
 
-                // Run rules engine against the expando object
-                // var ruleResults = await rulesEngine.ExecuteAllRulesAsync("CSVWorkflow", expando);
-                Console.WriteLine($" {dict } --------------- {ruleResults}");
+                Console.WriteLine($" {dict} --------------- {ruleResults}");
                 foreach (var result in ruleResults)
                 {
                     if (!result.IsSuccess)
