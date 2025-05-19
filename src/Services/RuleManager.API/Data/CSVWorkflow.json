@@ -10,7 +10,7 @@
   {
     "RuleName": "CriticalBPCheck",
     "RuleExpressionType": "LambdaExpression",
-    "Expression": "Convert.ToInt32(input1.BloodPressure) \u003C 150",
+    "Expression": "Convert.ToInt32(input1[\u0022BloodPressure\u0022].Split(\u0027/\u0027)[0]) \u003C= 130 \u0026\u0026 Convert.ToInt32(input1[\u0022BloodPressure\u0022].Split(\u0027/\u0027)[1]) \u003C= 85",
     "ErrorMessage": "Patient has critical blood pressure",
     "SuccessEvent": "20",
     "Enabled": true
