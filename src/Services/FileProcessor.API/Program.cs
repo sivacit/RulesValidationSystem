@@ -10,6 +10,8 @@ using StackExchange.Redis;
 using AspNetCore.Localizer.Json.JsonOptions;
 using Microsoft.Extensions.Localization;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,6 +36,11 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SetDefaultCulture("en");
     options.AddSupportedCultures(cultures);
     options.AddSupportedUICultures(cultures);
+});
+
+builder.Services.AddHttpClient("RuleEngine", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5182"); // RuleEngine.API
 });
 
 // ✅ Add CORS policy

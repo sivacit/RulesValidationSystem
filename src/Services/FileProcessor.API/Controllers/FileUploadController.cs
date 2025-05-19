@@ -22,7 +22,8 @@ public class FileUploadController : ControllerBase
     private readonly FileParserFactory _factory;
     private readonly IRedisRepository _redis;
 
-    private readonly RulesEngine.RulesEngine _rulesEngine;
+    private readonly IHttpClientFactory _httpClientFactory;
+
 
     private readonly IWebHostEnvironment _env;
 
@@ -39,12 +40,13 @@ public class FileUploadController : ControllerBase
         return expando;
     }
 
-    public FileUploadController(FileParserFactory factory, IRedisRepository redis, IStringLocalizerFactory localizerFactory, IWebHostEnvironment env)
+    public FileUploadController(FileParserFactory factory, IRedisRepository redis, IStringLocalizerFactory localizerFactory, IWebHostEnvironment env, IHttpClientFactory httpClientFactory)
     {
         this._factory = factory;
         this._redis = redis;
         this._localizer = localizerFactory.Create("lang", "FileProcessor.API");
         this._env = env;
+        this._httpClientFactory = httpClientFactory;
 
         Console.WriteLine("Assembly: " + Assembly.GetExecutingAssembly().GetName().Name);
         Console.WriteLine($"Using localizer: lang, assembly: {Assembly.GetExecutingAssembly().GetName().Name}");
@@ -116,16 +118,31 @@ public class FileUploadController : ControllerBase
     public async Task<IActionResult> Upload(IFormFile file)
     {
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources", "lang.en.json");
-        Console.WriteLine($"---------------- File Path {filePath}");
-
         if (file == null || file.Length == 0)
             return BadRequest(_localizer["FileEmpty"]);
 
+        var httpClient = _httpClientFactory.CreateClient("RuleEngine");
+        var response = await httpClient.GetAsync("/api/Rules/Configure?workflowName=CSVWorkflow");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
+        }
+        var workflowJson = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(workflowJson);
+
         // Load rules and create the RulesEngine instance
-        var rulesPath = Path.Combine(_env.ContentRootPath, "rules.json");
-        var rulesJson = System.IO.File.ReadAllText(rulesPath);
-        var workflows = JsonSerializer.Deserialize<Workflow[]>(rulesJson);
+        // var rulesPath = Path.Combine(_env.ContentRootPath, "rules.json");
+        // var rulesJson = System.IO.File.ReadAllText(rulesPath);
+        var workflow = JsonSerializer.Deserialize<Workflow>(workflowJson, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        var workflows = new[] { workflow! }; // Wrap into array
         var rulesEngine = new RulesEngine.RulesEngine(workflows, null); // ✅ use this instead of _rulesEngine
+
+
 
         try
         {

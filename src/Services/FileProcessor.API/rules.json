@@ -3,16 +3,18 @@
     "WorkflowName": "CSVWorkflow",
     "Rules": [
       {
-        "RuleName": "Age",
-        "Rules": null,
-        "Properties": null,
-        "Operator": null,
-        "ErrorMessage": "patient should be 19",
-        "Enabled": true,
-        "WorkflowsToInject": null,
-        "Expression": "Convert.ToInt32(input1.Age) > 19",
-        "Actions": null,
-        "SuccessEvent": "2"
+        "RuleName": "AgeCheck",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "Convert.ToInt32(input1.Age) >= 18",
+        "ErrorMessage": "Patient must be at least 18 years old",
+        "Enabled": true
+      },
+      {
+      "RuleName": "HighBPCheck",
+      "Expression": "Convert.ToInt32(input1.BloodPressure) < 150",
+      "SuccessEvent": "Normal",
+      "ErrorMessage": "High Blood Pressure Detected, Consult doctor",
+      "Enabled": true
       }
     ]
   }

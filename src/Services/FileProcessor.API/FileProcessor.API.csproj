@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\SharedKernel\SharedKernel.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\IntegrationEvents\IntegrationEvents.csproj" />
+    <ProjectReference Include="..\RVS.Shared\RVS.Shared.csproj" />
   </ItemGroup>
 
 </Project>
