@@ -1,21 +1,19 @@
-[
-  {
-    "WorkflowName": "CSVWorkflow",
-    "Rules": [
-      {
-        "RuleName": "AgeCheck",
-        "RuleExpressionType": "LambdaExpression",
-        "Expression": "Convert.ToInt32(input1.Age) >= 18",
-        "ErrorMessage": "Patient must be at least 18 years old",
-        "Enabled": true
-      },
-      {
-      "RuleName": "HighBPCheck",
-      "Expression": "Convert.ToInt32(input1.BloodPressure) < 150",
-      "SuccessEvent": "Normal",
-      "ErrorMessage": "High Blood Pressure Detected, Consult doctor",
+{
+  "WorkflowName": "CSVWorkflow",
+  "Rules": [
+    {
+      "RuleName": "AgeCheck",
+      "Expression": "Convert.ToInt32(input1.Age) >= 50",
+      "SuccessEvent": "10",
+      "ErrorMessage": "Patient must be at least 50 years old",
       "Enabled": true
-      }
-    ]
-  }
-]
+    },
+    {
+      "RuleName": "CriticalBPCheck",
+      "Expression": "Convert.ToInt32(input1[\"BloodPressure\"].Split('/')[0]) <= 130 && Convert.ToInt32(input1[\"BloodPressure\"].Split('/')[1]) <= 85",
+      "SuccessEvent": "20",
+      "ErrorMessage": "Patient has critical blood pressure",
+      "Enabled": true
+    }
+  ]
+}
