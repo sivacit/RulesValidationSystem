@@ -5,6 +5,7 @@ DOCKER_COMPOSE=docker/docker-compose.yml
 # Define project paths
 FILEPROCESS_API=$(SERVICES)/FileProcessor.API
 RULEENGINE_API=$(SERVICES)/RuleManager.API/
+WEB_UI=src/Web/UI
 
 # Run both services
 run:
@@ -14,6 +15,8 @@ run:
 	@echo "Running RuleEngine.API..."
 	@cd $(RULEENGINE_API) && dotnet run &
 	
+	@echo "Running Web UI..."
+	cd $(WEB_UI) && npm install && npm run start &
 	@wait
 
 # Default target
@@ -40,7 +43,7 @@ build:
 run:
 	dotnet run --project $(FILEPROCESS_API)/FileProcessor.API.csproj &
 	dotnet run --project $(RULEENGINE_API)/RuleManager.API.csproj &
-	dotnet run --project $(SERVICES)/Lookup.API/Lookup.API.csproj
+	cd $(WEB_UI) && npm install && npm run start &
 
 .PHONY: test
 test:
