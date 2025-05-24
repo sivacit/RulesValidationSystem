@@ -9,8 +9,6 @@ using RuleValidationSystem.Models;
 using System.Text.Json;
 using System.Dynamic;
 
-
-
 /// <summary>
 /// Handles file uploads and validation.
 /// </summary>
@@ -159,7 +157,7 @@ public class FileUploadController : ControllerBase
             foreach (var record in limitedRecords)
             {
                 var expando = ToExpando(record); // Convert FileRecord to ExpandoObject
-                var rowDict = ToFlatDictionary(expando);
+                var rowDict =Utils.ToFlatDictionary(expando);
                 foreach (var kvp in rowDict)
                 {
                     Console.WriteLine($"{kvp.Key} = {kvp.Value}");

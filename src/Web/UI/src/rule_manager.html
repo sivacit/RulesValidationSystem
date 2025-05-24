@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    @@include("./partials/title-meta.html", {"title": "Rule Manager"})
+    @@include('./partials/head-css.html')
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      .editor-container {
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .left-panel,
+      .right-panel {
+        height: 100%;
+        overflow-y: auto;
+      }
+
+      .left-panel {
+        width: 80%;
+        border-right: 1px solid #ccc;
+      }
+
+      .right-panel {
+        width: 20%;
+        padding: 1rem;
+      }
+
+      #monaco-editor {
+        width: 100%;
+        height: 100vh;
+      }
+    </style>
+  </head>
+
+  <body class="skin-light">
+    <div id="wrapper">
+      @@include('./partials/sidenav.html')
+      <div id="page-wrapper" class="gray-bg">
+        @@include('./partials/topbar.html')
+        @@include("./partials/page-title.html", {"title": "Rule Manager", "subtitle": "Layouts"})
+
+        <div class="container-fluid h-100">
+          <div class="row h-100">
+            <!-- Vue Rule Editor Panel -->
+            <div class="col-6 p-3 overflow-auto" id="rules-vue-app">
+              <h5>Rules Editor</h5>
+              <nav class="navbar navbar-light bg-light px-3 mb-3">
+                <div class="ms-auto d-flex gap-2">
+                  <button class="btn btn-primary" @click="addRule">
+                    ➕ Add Rule
+                  </button>
+                  <button class="btn btn-success" @click="saveRules">
+                    💾 Save Rules
+                  </button>
+                </div>
+              </nav>
+
+              <!-- Rule Cards -->
+              <div
+                v-for="(rule, index) in rules"
+                :key="index"
+                class="card m-2 p-3 position-relative"
+                @focusout="updateMonaco"
+                tabindex="0"
+              >
+                <!-- Delete Icon -->
+                <button
+                  class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                  @click="removeRule(index)"
+                  title="Remove Rule"
+                >
+                  ✖
+                </button>
+
+                <div class="row g-3 align-items-start">
+                  <div class="col-md-2">
+                    <label class="form-label mb-1">Rule Name</label>
+                    <input
+                      v-model="rule.RuleName"
+                      class="form-control form-control-sm"
+                    />
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label mb-1">Expression</label>
+                    <textarea
+                      v-model="rule.Expression"
+                      rows="3"
+                      class="form-control form-control-sm"
+                    ></textarea>
+                  </div>
+
+                  <div class="col-md-2">
+                    <label class="form-label mb-1">Success Event</label>
+                    <input
+                      v-model="rule.SuccessEvent"
+                      class="form-control form-control-sm"
+                    />
+                  </div>
+
+                  <div class="col-md-3">
+                    <label class="form-label mb-1">Error Message</label>
+                    <input
+                      v-model="rule.ErrorMessage"
+                      class="form-control form-control-sm"
+                    />
+                  </div>
+
+                  <div class="col-md-1 d-flex flex-column pt-3">
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        v-model="rule.Enabled"
+                        :id="'enabled-' + index"
+                      />
+                      <label class="form-check-label" :for="'enabled-' + index"
+                        >Enabled</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Monaco Editor Panel -->
+            <div class="col-6 p-0 border-end">
+              <h1>Rules</h1>
+              <div id="monaco-editor"></div>
+            </div>
+          </div>
+        </div>
+
+        @@include('./partials/footer.html')
+      </div>
+    </div>
+
+    @@include('./partials/right-sidebar.html')
+    @@include('./partials/footer-scripts.html')
+
+    <!-- Required Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+    <!-- Vue + Monaco Logic -->
+    <script>
+      const { createApp, ref, onMounted } = Vue;
+
+      createApp({
+        setup() {
+          const rules = ref([]);
+          let editor = null;
+
+          const updateMonaco = () => {
+            const workflow = {
+              WorkflowName: rules.WorkflowName,
+              Rules: rules.value.map((rule) => ({
+                RuleName: rule.RuleName,
+                Expression: rule.Expression,
+                SuccessEvent: rule.SuccessEvent,
+                ErrorMessage: rule.ErrorMessage,
+                Enabled: rule.Enabled,
+              })),
+            };
+
+            if (editor && !editor.isDisposed?.()) {
+              editor.setValue(JSON.stringify(workflow, null, 2));
+            }
+          };
+
+          const fetchRules = async () => {
+            try {
+              const res = await fetch(
+                "http://localhost:5182/api/Rules/Configure?workflowName=CSVWorkflow"
+              );
+              var data = await res.json();
+              rules.WorkflowName = data.WorkflowName;
+              rules.value = (data.Rules || []).map((rule) => ({
+                RuleName: rule.RuleName || "",
+                Expression: rule.Expression || "",
+                SuccessEvent: rule.SuccessEvent || "",
+                ErrorMessage: rule.ErrorMessage || "",
+                Enabled: rule.Enabled ?? true,
+              }));
+              updateMonaco(); // Only call after rules loaded and editor ready
+            } catch (err) {
+              console.error("❌ Failed to fetch rules:", err);
+            }
+          };
+
+          const addRule = () => {
+            rules.value.push({
+              RuleName: "",
+              Expression: "",
+              SuccessEvent: "",
+              ErrorMessage: "",
+              Enabled: true,
+            });
+            updateMonaco();
+          };
+
+          const removeRule = (index) => {
+            rules.value.splice(index, 1);
+            updateMonaco();
+          };
+
+          const saveRules = async () => {                        
+             updateMonaco();
+              const workflow = {
+                WorkflowName: rules.WorkflowName,
+                Rules: rules.value.map((rule) => ({
+                  RuleName: rule.RuleName,
+                  Expression: rule.Expression,
+                  SuccessEvent: rule.SuccessEvent,
+                  ErrorMessage: rule.ErrorMessage,
+                  Enabled: rule.Enabled,
+                  RuleExpressionType: "LambdaExpression",
+                })),
+              };
+              
+              try {
+                const res = await fetch(
+                  "http://localhost:5182/api/Rules/Configure",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(workflow),
+                  }
+                );
+
+                if (!res.ok) {
+                  throw new Error(`Server error: ${res.status}`);
+                }
+
+                alert("✅ Rules saved to backend successfully");
+                updateMonaco(); // Update Monaco after successful save
+              } catch (err) {
+                console.error("❌ Failed to save rules:", err);
+                alert("❌ Failed to save rules to backend");
+              }         
+          };
+
+          onMounted(() => {
+            require.config({
+              paths: {
+                vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs",
+              },
+            });
+
+            require(["vs/editor/editor.main"], function () {
+              const container = document.getElementById("monaco-editor");
+              if (!container) {
+                console.error("❌ Monaco editor container not found");
+                return;
+              }
+
+              editor = monaco.editor.create(container, {
+                value: "", // Start empty
+                language: "json",
+                theme: "vs-dark",
+              });
+
+              window.editor = editor;
+              fetchRules(); // ✅ Fetch only after Monaco is ready
+            });
+          });
+
+          return {
+            rules,
+            addRule,
+            removeRule,
+            saveRules,
+            updateMonaco,
+          };
+        },
+      }).mount("#rules-vue-app");
+    </script>
+  </body>
+</html>

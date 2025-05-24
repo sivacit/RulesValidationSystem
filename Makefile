@@ -2,6 +2,20 @@ SOLUTION=RulesValidationSystem.sln
 SERVICES=src/Services
 DOCKER_COMPOSE=docker/docker-compose.yml
 
+# Define project paths
+FILEPROCESS_API=$(SERVICES)/FileProcessor.API
+RULEENGINE_API=$(SERVICES)/RuleManager.API/
+
+# Run both services
+run:
+	@echo "Running FileProcess.API..."
+	@cd $(FILEPROCESS_API) && dotnet run &
+
+	@echo "Running RuleEngine.API..."
+	@cd $(RULEENGINE_API) && dotnet run &
+	
+	@wait
+
 # Default target
 .PHONY: help
 help:
@@ -24,8 +38,8 @@ build:
 
 .PHONY: run
 run:
-	dotnet run --project $(SERVICES)/FileProcessor.API/FileProcessor.API.csproj &
-	dotnet run --project $(SERVICES)/RuleManager.API/RuleManager.API.csproj &
+	dotnet run --project $(FILEPROCESS_API)/FileProcessor.API.csproj &
+	dotnet run --project $(RULEENGINE_API)/RuleManager.API.csproj &
 	dotnet run --project $(SERVICES)/Lookup.API/Lookup.API.csproj
 
 .PHONY: test

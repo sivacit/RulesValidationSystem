@@ -1,0 +1,147 @@
+@@include('./partials/html.html')
+
+<head>
+    @@include("./partials/title-meta.html", {"title": "Empty Page"})
+
+    @@include('./partials/head-css.html')
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .editor-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .left-panel,
+        .right-panel {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .left-panel {
+            width: 80%;
+            border-right: 1px solid #ccc;
+        }
+
+        .right-panel {
+            width: 20%;
+            padding: 1rem;
+        }
+
+        #monaco-editor {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+</head>
+
+<body class="skin-light">
+    
+    <div id="wrapper">
+
+        @@include('./partials/sidenav.html')
+
+        <div id="page-wrapper" class="gray-bg">
+
+            @@include('./partials/topbar.html')
+
+            @@include("./partials/page-title.html", {"title":"Rule Manager","subtitle":"Layouts"})
+
+            <div class="container-fluid h-100">
+                <div class="row h-100">
+                    <!-- Form Panel -->
+                    <div class="col-6 p-3 overflow-auto">
+                        <h5>Rules Editor</h5>
+                        <div id="rules-container">
+                            <nav class="navbar navbar-light bg-light px-3">
+                                <div class="ms-auto d-flex gap-2">
+                                    <button class="btn btn-primary" id="btnAddRule">➕ Add Rule</button>
+                                    <button class="btn btn-success" id="btnSaveRules">💾 Save Rules</button>
+                                </div>
+                            </nav>                            
+                        </div>
+                        <div id="template-container" style="display: none;"></div>
+                    </div>
+                    <!-- Monaco Panel -->
+                    <div class="col-6 p-0 border-end">
+                        <h1>Rules</h1>
+                        <div id="monaco-editor" style="height: 100vh;"></div>
+                    </div>
+                </div>
+            </div>
+
+            @@include('./partials/footer.html')
+
+        </div>
+
+    </div>
+
+    @@include('./partials/right-sidebar.html')
+
+    @@include('./partials/footer-scripts.html')
+
+
+    <script>
+        $(function () {
+            $('#template-container').load('/templates/rule-template.html'); 
+        });        // Add Rule Button
+
+        $(document).on('click', '#btnAddRule', function () {
+            const tmpl = document.getElementById('rule-template');
+            const clone = tmpl.content.cloneNode(true);
+            $('#rules-container').append(clone);
+        });
+
+        // Remove Rule
+        $(document).on('click', '.btnRemoveRule', function () {
+            $(this).closest('.card').remove();
+        });
+
+        // Save Rules Button
+        $('#btnSaveRules').on('click', function () {
+            const rules = [];
+            $('#rules-container .card').each(function () {
+                const name = $(this).find('.rule-name').val();
+                const expression = $(this).find('.rule-expression').val();
+                const success = $(this).find('.rule-success').val();
+                if (name && expression) {
+                    rules.push({
+                        RuleName: name,
+                        Expression: expression,
+                        SuccessEvent: success || ""
+                    });
+                }
+            });
+            const workflow = {
+                WorkflowName: "Discount",
+                Rules: rules
+            };
+            editor.setValue(JSON.stringify(workflow, null, 2));
+            alert("✅ Rules saved to Monaco editor");
+        });
+    </script>
+
+    <!-- Dashboard 1 Demo js -->
+    {{/*  <script src="js/pages/dashboard_1.js"></script>  */}}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+
+    <script>
+        require.config({ paths: { vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs" } });
+        require(["vs/editor/editor.main"], function () {
+            window.editor = monaco.editor.create(document.getElementById("monaco-editor"), {
+                value: '{\n  "WorkflowName": "Discount",\n  "Rules": []\n}',
+                language: "json",
+                theme: "vs-dark"
+            });
+        });
+    </script>
+</body>
+
+</html>

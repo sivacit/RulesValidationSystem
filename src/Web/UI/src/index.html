@@ -1,0 +1,129 @@
+@@include('./partials/html.html')
+
+<head>
+    @@include("./partials/title-meta.html", {"title": "File Upload"})
+
+    <link href="plugins/dropzone/css/basic.css" rel="stylesheet">
+    <link href="plugins/dropzone/css/dropzone.css" rel="stylesheet">
+    <!-- DataTables Bootstrap 5 CSS -->
+    <link href="plugins/datatables/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="plugins/datatables/css/buttons.bootstrap5.min.css" rel="stylesheet">
+
+    <link href="plugins/codemirror/css/codemirror.css" rel="stylesheet">
+    <link href="plugins/codemirror/css/ambiance.css" rel="stylesheet">
+
+    @@include('./partials/head-css.html')
+    <!-- Mainly Plugin Scripts -->
+    {{/*
+    <script src="js/jquery/js/jquery.min.js"></script> */}}
+    <script src="plugins/datatables/js/dataTables.bootstrap5.min.js"></script>
+    <script src="js/metismenu/js/metisMenu.min.js"></script>
+    <script src="js/pace-js/js/pace.min.js"></script>
+    <script src="js/wow.js/js/wow.min.js"></script>
+    <script src="js/lucide/js/lucide.min.js"></script>
+    <script src="js/simplebar/js/simplebar.min.js"></script>
+    <!-- Custom and Plugin Javascript -->
+    <script src="js/inspinia.js"></script>
+    <style>
+        .red-text {
+            color: red !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+
+        @@include('./partials/sidenav.html')
+
+        <div id="page-wrapper" class="gray-bg">
+
+            @@include('./partials/topbar.html')
+            @@include("./partials/page-title.html", {"title":"Encounter Validator","subtitle":""})
+            <div class="wrapper wrapper-content animated fadeIn">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <p>
+                                    <strong>Inspectra</strong> Please upload encounter file in CSV, Excel, JSON, or XML
+                                    format to begin validating its contents using our rule engine and AI-powered checks.
+                                </p>
+
+                                <form action="#" class="dropzone" id="dropzoneForm">
+                                    <div class="fallback">
+                                        <input name="file" type="file" multiple />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button class="btn btn-sm btn-primary float-end mt-n1" type="submit"><strong>Validate
+                                    Encounter</strong></button>
+                        </div>
+                    </div>
+                </div> <!-- end of row1 -->
+                <div class="row">
+                    <div class="wrapper wrapper-content animated fadeInRight">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox-content">
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-striped table-bordered table-hover dataTables-example">
+                                            <thead>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of row 2 -->
+        </div>
+        @@include('./partials/footer.html')
+    </div>
+    </div>
+    @@include('./partials/footer-scripts.html')
+
+    <!-- DataTables Core -->
+    <script src="plugins/datatables/js/dataTables.min.js"></script>
+    <script src="plugins/datatables/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="plugins/datatables/js/dataTables.buttons.min.js"></script>
+    <script src="plugins/datatables/js/buttons.bootstrap5.min.js"></script>
+    <script src="plugins/datatables/js/buttons.html5.min.js"></script>
+    <script src="plugins/datatables/js/buttons.print.min.js"></script>
+    <script src="plugins/datatables/js/buttons.colVis.min.js"></script>
+
+    <!-- PDF and Excel Export Support -->
+    <script src="plugins/datatables/js/jszip.min.js"></script>
+    <script src="plugins/datatables/js/pdfmake.min.js"></script>
+    <script src="plugins/datatables/js/vfs_fonts.js"></script>
+
+    <!-- Page-Level Scripts -->
+    <script src="js/demo/datatables.js"></script>
+
+
+    <!-- Page-Level Scripts -->
+    <script src="js/demo/datatables.js"></script>
+
+    <!-- BS custom file -->
+    <script src="plugins/bs-custom-file/js/bs-custom-file-input.min.js"></script>
+
+    <!-- DROPZONE -->
+    <script src="js/dropzone/js/dropzone.js"></script>
+
+    <!-- CodeMirror -->
+    <script src="plugins/codemirror/js/codemirror.js"></script>
+    <script src="plugins/codemirror/js/xml.js"></script>
+
+    <!-- File Upload Demo js -->
+    <script src="js/demo/form_file_upload.js"></script>
+</body>
+
+</html>

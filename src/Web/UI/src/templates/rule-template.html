@@ -1,0 +1,28 @@
+<template id="rule-template">
+  <div class="card mb-3 p-2">
+      <button class="btn btn-sm btn-danger btnRemoveRule position-absolute bottom-0 end-0 m-2">🗑️</button>
+      <div class="d-flex flex-wrap align-items-middle gap-2">
+        <div class="form-group flex-grow-1 me-2" style="min-width: 100px;">
+          <label class="sr-only" for="rule-name">Name</label>
+          <input type="text" class="form-control rule-name" placeholder="Field Name" />
+        </div>
+        <div class="form-group flex-grow-1 me-2" style="min-width: 300px;">
+          <label class="sr-only" for="rule-expression">Expression</label>
+          <textarea class="form-control rule-expression" style="height: 100px;" placeholder="Expression (e.g., input1.value > 10)"></textarea>
+        </div>
+        <div class="form-group flex-grow-1 me-2" style="min-width: 150px;">
+          <label class="sr-only" for="rule-success-1">Success Event 1</label>
+          <input type="text" class="form-control rule-success" placeholder="Success Event 1" />
+        </div>
+        <div class="form-group flex-grow-1 me-2" style="min-width: 100px;">
+          <label class="sr-only" for="rule-success-2">Error Message</label>
+          <input type="text" class="form-control rule-success" placeholder="Error Message" />
+        </div>
+        <div class="form-check form-switch me-2" style="min-width: 100px;">
+          <input class="form-check-input rule-enabled" type="checkbox" id="rule-enabled">
+          <label class="form-check-label" for="rule-enabled">Enabled</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

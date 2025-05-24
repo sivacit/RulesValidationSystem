@@ -1,0 +1,44 @@
+@@include('./partials/html.html')
+
+<head>
+    @@include("./partials/title-meta.html", {"title": "File Manager"})
+
+    @@include('./partials/head-css.html')
+</head>
+
+<body class="skin-light">
+
+    <div id="wrapper">
+
+        @@include('./partials/sidenav.html')
+
+        <div id="page-wrapper" class="gray-bg">
+
+            @@include('./partials/topbar.html')
+
+            @@include("./partials/page-title.html", {"title":"File Manager","subtitle":""})
+
+            <div class="wrapper wrapper-content">
+                <div class="fadeInRightBig">
+                    <h3 class="font-bold">This is page content</h3>
+                    <div class="error-desc">
+                        You can create here any grid layout you want. And any variation layout you imagine:) Check out
+                        main dashboard and other site. It use many different layout.
+                        <br /><a href="index.html" class="btn btn-primary mt-2">Dashboard</a>
+                    </div>
+                </div>
+            </div>
+
+            @@include('./partials/footer.html')
+
+        </div>
+
+    </div>
+
+    @@include('./partials/right-sidebar.html')
+
+    @@include('./partials/footer-scripts.html')
+
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+@@include('./partials/html.html')
+
+<head>
+    @@include("./partials/title-meta.html", {"title": "500 Error"})
+
+    @@include('./partials/head-css.html')
+</head>
+
+<body class="skin-light gray-bg"> 
+
+    <div class="middle-box text-center animated fadeInDown">
+        <h1>500</h1>
+        <h3 class="font-bold">Internal Server Error</h3>
+
+        <div class="error-desc">
+            The server encountered something unexpected that didn't allow it to complete the request. We apologize.<br />
+            You can go back to main page:
+            <br>
+
+            <a href="index.html" class="btn btn-primary mt-3">Dashboard</a>
+        </div>
+    </div>
+
+    @@include('./partials/footer-scripts.html')
+
+</body>
+
+</html>

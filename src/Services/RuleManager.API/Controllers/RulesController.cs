@@ -23,6 +23,17 @@ namespace RulesValidationSystem.Controllers
             _dataDirectory = Path.Combine(env.ContentRootPath, "Data");
         }
 
+        /// <summary>
+        /// Saves or updates a workflow configuration with the specified rules.
+        /// </summary>
+        /// <param name="input">
+        /// The <see cref="WorkflowInputDto"/> containing the workflow name and rules to be saved.
+        /// </param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> indicating the result of the operation:
+        /// - <c>BadRequest</c>
+        /// <response code="200">Returns the workflow configuration and rules.</response>
+        /// <response code="404">If the workflow is not found in the database.</response>
         [HttpGet("Configure")]
         public async Task<IActionResult> Configure(string workflowName = "DefaultWorkflow")
         {
@@ -71,32 +82,41 @@ namespace RulesValidationSystem.Controllers
 
 
 
+        /// <summary>
+        /// Saves or updates a workflow configuration with the specified rules.
+        /// </summary>
+        /// <param name="input">The workflow input containing the workflow name and rules.</param>
+        /// <returns>A message indicating the result of the operation.</returns>
+        /// <response code="200">Workflow saved successfully.</response>
+        /// <response code="400">If the input is invalid.</response>
         [HttpPost("Configure")]
+        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> SaveWorkflow([FromBody] WorkflowInputDto input)
         {
             if (input == null || string.IsNullOrWhiteSpace(input.WorkflowName) || input.Rules == null)
-                return BadRequest("WorkflowName and Rules are required.");
+            return BadRequest("WorkflowName and Rules are required.");
 
             var rulesJson = JsonSerializer.Serialize(input.Rules, new JsonSerializerOptions
             {
-                WriteIndented = true
+            WriteIndented = true
             });
 
             var existing = await _context.RulesWorkflows
-                .FirstOrDefaultAsync(w => w.WorkflowName == input.WorkflowName);
+            .FirstOrDefaultAsync(w => w.WorkflowName == input.WorkflowName);
             Console.WriteLine($"Already existing workflow {existing}  --- {input.WorkflowName}");
             if (existing != null)
             {
-                existing.RulesJson = rulesJson;
-                _context.RulesWorkflows.Update(existing);
+            existing.RulesJson = rulesJson;
+            _context.RulesWorkflows.Update(existing);
             }
             else
             {
-                _context.RulesWorkflows.Add(new RulesWorkflow
-                {
-                    WorkflowName = input.WorkflowName,
-                    RulesJson = rulesJson
-                });
+            _context.RulesWorkflows.Add(new RulesWorkflow
+            {
+                WorkflowName = input.WorkflowName,
+                RulesJson = rulesJson
+            });
             }
 
             await _context.SaveChangesAsync();

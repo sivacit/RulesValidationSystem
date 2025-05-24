@@ -2,8 +2,8 @@
   {
     "RuleName": "AgeCheck",
     "RuleExpressionType": "LambdaExpression",
-    "Expression": "Convert.ToInt32(input1.Age) \u003E= 18",
-    "ErrorMessage": "Patient must be at least 18 years old",
+    "Expression": "Convert.ToInt32(input1.Age) \u003E= 50",
+    "ErrorMessage": "Patient must be at least 50 years old",
     "SuccessEvent": "10",
     "Enabled": true
   },

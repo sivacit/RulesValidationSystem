@@ -1,0 +1,6 @@
+projectKey=Rule-Validation-System
+serverUrl=http://localhost:9000
+serverVersion=25.5.0.107428
+dashboardUrl=http://localhost:9000/dashboard?id=Rule-Validation-System
+ceTaskId=ddd57ba0-d374-4597-9b60-2129aa85d1e1
+ceTaskUrl=http://localhost:9000/api/ce/task?id=ddd57ba0-d374-4597-9b60-2129aa85d1e1
