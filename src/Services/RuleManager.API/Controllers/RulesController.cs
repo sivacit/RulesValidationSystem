@@ -35,7 +35,7 @@ namespace RulesValidationSystem.Controllers
         /// <response code="200">Returns the workflow configuration and rules.</response>
         /// <response code="404">If the workflow is not found in the database.</response>
         [HttpGet("Configure")]
-        public async Task<IActionResult> Configure(string workflowName = "DefaultWorkflow")
+        public async Task<IActionResult> Configure(string workflowName = "CSVWorkflow")
         {
             Console.WriteLine($"------------- {workflowName}");
 
