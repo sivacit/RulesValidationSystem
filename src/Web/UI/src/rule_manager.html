@@ -227,6 +227,8 @@
               };
               
               try {
+                alert(JSON.stringify(workflow, null, 2));
+                
                 const res = await fetch(
                   "http://localhost:5182/api/Rules/Configure",
                   {

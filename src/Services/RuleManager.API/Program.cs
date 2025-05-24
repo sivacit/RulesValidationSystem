@@ -59,10 +59,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    builder.Services.AddSwaggerGen();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     builder.Services.AddSwaggerGen();
+// }
 
 
 // Adding Swagger

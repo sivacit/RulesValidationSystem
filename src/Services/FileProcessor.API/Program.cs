@@ -62,25 +62,25 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 
 // Adding Swagger and OPENAPI:
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "File Processor API",
-        Version = "v1",
-        Description = "API for uploading and validating CSV, Excel, JSON, and XML files using RulesEngine.",
-        Contact = new OpenApiContact
-        {
-            Name = "Sutherland Global",
-            Email = "sivakumar.krishnasamy@sutherlandglobal.com"
-        }
-    });
+// builder.Services.AddSwaggerGen(options =>
+// {
+//     options.SwaggerDoc("v1", new OpenApiInfo
+//     {
+//         Title = "File Processor API",
+//         Version = "v1",
+//         Description = "API for uploading and validating CSV, Excel, JSON, and XML files using RulesEngine.",
+//         Contact = new OpenApiContact
+//         {
+//             Name = "Sutherland Global",
+//             Email = "sivakumar.krishnasamy@sutherlandglobal.com"
+//         }
+//     });
 
-    // Include XML comments (optional but recommended)
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
-});
+//     // Include XML comments (optional but recommended)
+//     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+//     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+//     options.IncludeXmlComments(xmlPath);
+// });
 
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
@@ -92,9 +92,7 @@ app.UseCors("AllowVueApp");
 
 
 app.UseRouting();
-app.UseAuthorization();
 
-app.MapControllers();
 
 // Adding Swagger
 app.UseSwagger();
@@ -104,10 +102,14 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "docs"; // Serve Swagger at root (optional)
 });
 
+app.UseAuthorization();
+
+app.MapControllers();
+
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    builder.Services.AddSwaggerGen();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     builder.Services.AddSwaggerGen();
+// }
 
 app.Run();

@@ -95,11 +95,11 @@ namespace RulesValidationSystem.Controllers
         public async Task<IActionResult> SaveWorkflow([FromBody] WorkflowInputDto input)
         {
             if (input == null || string.IsNullOrWhiteSpace(input.WorkflowName) || input.Rules == null)
-            return BadRequest("WorkflowName and Rules are required.");
+                return BadRequest("WorkflowName and Rules are required.");
 
             var rulesJson = JsonSerializer.Serialize(input.Rules, new JsonSerializerOptions
             {
-            WriteIndented = true
+                WriteIndented = true
             });
 
             var existing = await _context.RulesWorkflows
@@ -107,16 +107,16 @@ namespace RulesValidationSystem.Controllers
             Console.WriteLine($"Already existing workflow {existing}  --- {input.WorkflowName}");
             if (existing != null)
             {
-            existing.RulesJson = rulesJson;
-            _context.RulesWorkflows.Update(existing);
+                existing.RulesJson = rulesJson;
+                _context.RulesWorkflows.Update(existing);
             }
             else
             {
-            _context.RulesWorkflows.Add(new RulesWorkflow
-            {
-                WorkflowName = input.WorkflowName,
-                RulesJson = rulesJson
-            });
+                _context.RulesWorkflows.Add(new RulesWorkflow
+                {
+                    WorkflowName = input.WorkflowName,
+                    RulesJson = rulesJson
+                });
             }
 
             await _context.SaveChangesAsync();
